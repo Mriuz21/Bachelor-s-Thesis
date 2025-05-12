@@ -1,16 +1,19 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import mysql.connector
+import os
+from dotenv import load_dotenv
 
+load_dotenv() 
 app = Flask(__name__)
 CORS(app)
 
 # MySQL connection
 db = mysql.connector.connect(
-    host="localhost",
-    user="root",  # No password
-    password="",  # No password
-    database="fake_news_db"  # The database name you selected
+    host=os.getenv('DB_HOST', 'localhost'),
+    user=os.getenv('DB_USER', 'root'),
+    password=os.getenv('DB_PASSWORD', ''), 
+    database=os.getenv('DB_NAME', 'fake_news_db')
 )
 cursor = db.cursor()
 
