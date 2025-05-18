@@ -1,11 +1,14 @@
-# BERT Tiny Model
+# Fake News Detection with BERT-Tiny
 
-In `bert_tiny.py`, we load and test the BERT Tiny model (fine-tuned to detect fake news) on the WELFake dataset. WELFake is considered one of the best datasets for fake news detection currently available.
+BERT tiny is a lightweight version of BERT fine-tuned specifically to detect fake news.
 
-## Results
+## Model Overview
 
-- **Model**: mrm8488/bert-tiny-finetuned-fake-news-detection
-- **Dataset**: WELFake (72,134 articles)
-- **Accuracy**: 66.01%
+- **Model Name**: `bert-tiny-finetuned-fake-news-detection`
+- **Architecture**: BERT-Tiny (4 Transformer layers, ~14M parameters)
+- **Base**: Distilled from the original BERT model (110M parameters)
 
-The model processes the title and text of news articles to classify them as real (1) or fake (0).
+## Performance
+
+- **Accuracy Achieved**: **66.01%**
+
