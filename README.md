@@ -9,4 +9,4 @@ This repository contains various models tested on the WELFake dataset for fake n
 
 ## Dataset
 
-All models were tested on the WELFake dataset, which combines multiple sources of fake news datasets and contains 72,134 articles.
+All models were tested on the WELFake dataset, which contains 72,134 articles.
