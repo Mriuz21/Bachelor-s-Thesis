@@ -5,5 +5,5 @@ WElFake dataset contains 72,134 articles
 
 ## Models Tested
 
-- [BERT Tiny](bert_tiny.md) - Accuracy: 66.01%
+- [BERT Tiny](mdFiles/bert_tiny.md) - Accuracy: 66.01%
 - [More models to be added]
