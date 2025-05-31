@@ -1,10 +1,14 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+# app.py
 import mysql.connector
 import os
+import traceback
 from dotenv import load_dotenv
+from scraper import scrape_article
+from aiModel import predict_fake_news, MODELS
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 
-load_dotenv() 
+load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
@@ -12,7 +16,7 @@ CORS(app)
 db = mysql.connector.connect(
     host=os.getenv('DB_HOST', 'localhost'),
     user=os.getenv('DB_USER', 'root'),
-    password=os.getenv('DB_PASSWORD', ''), 
+    password=os.getenv('DB_PASSWORD', ''),
     database=os.getenv('DB_NAME', 'fake_news_db')
 )
 cursor = db.cursor()
@@ -22,8 +26,7 @@ def register():
     data = request.json
     username = data['username']
     password = data['password']
-    
-    # Store password as plain text (temporary for testing)
+
     try:
         cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, password))
         db.commit()
@@ -44,6 +47,55 @@ def login():
         return jsonify({'message': 'Login successful!'})
     else:
         return jsonify({'error': 'Invalid username or password'}), 401
+@app.route('/predict', methods=['POST'])
+def predict():
+    try:
+        data = request.get_json()
+        title = data.get('title')
+        text = data.get('text')
+
+        if not title or not text:
+            return jsonify({'error': 'Both title and text are required'}), 400
+
+        prediction = predict_fake_news(title, text)
+        return jsonify({'prediction': prediction})
+
+    except Exception as e:
+        print("ERROR during /predict:", e)
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/scrape_predict', methods=['POST'])
+def scrape_predict():
+    try:
+        data = request.get_json()
+        url = data.get('url')
+        model_key = data.get('model', 'roberta')  # Default to roberta if not specified
+        
+        if not url:
+            return jsonify({'error': 'No URL provided'}), 400
+        
+        article_data = scrape_article(url) 
+        title = article_data.get('title')
+        text = article_data.get('text')
+
+        if not title or not text:
+            return jsonify({'error': 'Scraping failed or incomplete data'}), 500
+
+        prediction = predict_fake_news(title, text, model_key)
+
+        return jsonify({
+            'title': title,
+            'text': text,
+            'prediction': prediction,
+            'model_used': MODELS[model_key]['display_name']
+        })
+
+    except Exception as e:
+        print("ERROR during /scrape_predict:", e)
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
