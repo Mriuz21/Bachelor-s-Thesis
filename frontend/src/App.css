@@ -30,18 +30,22 @@ body {
 
 .App {
   max-width: 600px;
-  margin: 0 auto;
+  margin: 0 auto; 
   padding: 20px;
 }
 
 .App-header {
+  position: fixed;
+  top: 20px;
+  left: 20px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 40px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #e1e1e1;
+  gap: 20px; /* space between items like Home, FAQ, History */
+  font-weight: bold;
+  font-size: 16px;
+  z-index: 1000;
 }
+
 
 .App-header h1 {
   color: var(--primary);
@@ -50,7 +54,7 @@ body {
 }
 
 .logout-btn {
-  position: fixed;  /* or absolute if you prefer */
+  position: fixed; 
   top: 20px;
   right: 20px;
   background-color: var(--primary);
@@ -63,13 +67,36 @@ body {
   transition: var(--transition);
   text-transform: uppercase;
   box-shadow: 0 8px 24px 0 rgba(255, 235, 167, 0.2);
-  z-index: 1000;  /* Ensures it stays on top */
+  z-index: 1000;  
 }
 .logout-btn:hover {
   background-color: var(--text-dark);
   color: var(--primary);
   transform: translateY(-2px);
 }
+.history-btn {
+  position: fixed;
+  top: 35px;
+  left: 320px; 
+  background-color: var(--primary);
+  color: var(--text-dark);
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: bold;
+  transition: var(--transition);
+  text-transform: uppercase;
+  box-shadow: 0 8px 24px 0 rgba(255, 235, 167, 0.2);
+  z-index: 1000;
+}
+
+.history-btn:hover {
+  background-color: var(--text-dark);
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
 
 .auth-form {
   max-width: 500px;

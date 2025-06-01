@@ -21,6 +21,7 @@ const Login = ({ onLoginSuccess }) => {
       });
       
       if (response.data.message === 'Login successful!') {
+        localStorage.setItem('user_id', response.data.user_id);
         onLoginSuccess();
         navigate('/home');
       }

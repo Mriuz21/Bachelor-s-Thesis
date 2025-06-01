@@ -1,0 +1,123 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6); 
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-container {
+  background-color: white;
+  padding: 20px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  width: 90%;
+  max-width: 600px; 
+  max-height: 85vh; 
+  display: flex;
+  flex-direction: column;
+  position: relative; 
+  transform: translateY(-60px)
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #333;
+}
+
+.modal-close-button {
+  background: transparent;
+  border: none;
+  font-size: 2rem; /* Makes the '×' character larger */
+  line-height: 1;
+  cursor: pointer;
+  color: #888;
+  padding: 0; /* Reset padding */
+}
+
+.modal-close-button:hover {
+  color: #333;
+}
+
+.modal-body {
+  overflow-y: auto; 
+  flex-grow: 1; 
+  
+  padding-right: 5px; 
+}
+
+
+.history-list-modal ul {
+  list-style: none;
+  padding: 0;
+  margin: 0; 
+}
+
+.history-list-modal li {
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  font-size: 0.9rem;
+}
+
+.history-list-modal li strong {
+  color: #555;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.history-list-modal li em {
+  color: #007bff;
+  word-break: break-all; 
+  display: block;
+  margin-bottom: 4px;
+}
+.history-list-modal .prediction-info {
+  margin-top: 5px;
+}
+
+.history-list-modal .fake { color: #dc3545; font-weight: bold; }
+.history-list-modal .real { color: #28a745; font-weight: bold; }
+
+.hide-history-btn-modal {
+  position: absolute;       
+  top: 10px;               
+  right: 10px;             
+  background-color: #6c757d;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  z-index: 10;              
+}
+
+
+.hide-history-btn-modal:hover {
+  background-color: #5a6268;
+}
+
+/* Optional: Prevent body scroll when modal is open */
+/* Add this class to <body> via JavaScript when modal opens */
+/* body.modal-open {
+  overflow: hidden;
+} */

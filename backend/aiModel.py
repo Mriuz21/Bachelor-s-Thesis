@@ -2,13 +2,13 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 
 MODELS = {
-    'roberta': {
+    'RoBERTa': {
         'name': 'winterForestStump/Roberta-fake-news-detector',
         'display_name': 'RoBERTa Fake News Detector',
         'tokenizer': None,
         'model': None
     },
-    'bert-tiny': {
+    'BERT-tiny': {
         'name': 'mrm8488/bert-tiny-finetuned-fake-news-detection',
         'display_name': 'BERT Tiny Fake News Detector',
         'tokenizer': None,
@@ -19,6 +19,12 @@ MODELS = {
         'display_name': 'BERT Fake News Detector',
         'tokenizer' : None,
         'model' : None
+    },
+    'My-BERT': {
+        'name': './fine_tuned_bert_welfake',
+        'display_name': 'My Fine-Tuned BERT',
+        'tokenizer': None,
+        'model': None
     }
 }
 
@@ -46,7 +52,7 @@ def load_models():
 
 load_models()
 
-def predict_fake_news(title, text, model_key='roberta'):
+def predict_fake_news(title, text, model_key='RoBERTa'):
     """Predict fake news using the specified model"""
     
     if model_key not in MODELS:
@@ -73,6 +79,6 @@ def predict_fake_news(title, text, model_key='roberta'):
         outputs = model(**inputs)
         prediction = torch.argmax(outputs.logits, dim=1).cpu().item()
         
-    if model_key == 'bert-tiny':
+    if model_key == 'BERT-tiny' or model_key ==  'My_BERT':
         prediction = 1 - prediction 
     return prediction

@@ -1,4 +1,3 @@
-# app.py
 import mysql.connector
 import os
 import traceback
@@ -44,7 +43,10 @@ def login():
     user = cursor.fetchone()
 
     if user:
-        return jsonify({'message': 'Login successful!'})
+        return jsonify({
+            'message': 'Login successful!',
+            'user_id': user[0]
+        })
     else:
         return jsonify({'error': 'Invalid username or password'}), 401
 @app.route('/predict', methods=['POST'])
@@ -70,7 +72,8 @@ def scrape_predict():
     try:
         data = request.get_json()
         url = data.get('url')
-        model_key = data.get('model', 'roberta')  # Default to roberta if not specified
+        model_key = data.get('model', 'RoBERTa')  
+        user_id = data.get('user_id')  
         
         if not url:
             return jsonify({'error': 'No URL provided'}), 400
@@ -84,6 +87,27 @@ def scrape_predict():
 
         prediction = predict_fake_news(title, text, model_key)
 
+        if user_id:
+            cursor.execute("""
+                INSERT INTO detections (user_id, url, model_used, prediction)
+                VALUES (%s, %s, %s, %s)
+            """, (user_id, url, model_key, prediction))
+            db.commit()
+
+            
+            cursor.execute("""
+                DELETE FROM detections
+                WHERE user_id = %s AND id NOT IN (
+                    SELECT id FROM (
+                        SELECT id FROM detections
+                        WHERE user_id = %s
+                        ORDER BY detected_at DESC
+                        LIMIT 20
+                    ) AS sub
+                )
+            """, (user_id, user_id))
+            db.commit()
+
         return jsonify({
             'title': title,
             'text': text,
@@ -95,6 +119,39 @@ def scrape_predict():
         print("ERROR during /scrape_predict:", e)
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
+@app.route('/history', methods=['GET'])
+def history():
+    user_id = request.args.get('user_id')
+
+    if not user_id:
+        return jsonify({'error': 'Missing user_id'}), 400
+
+    try:
+        cursor.execute("""
+            SELECT id, url, model_used, prediction,detected_at
+            FROM detections
+            WHERE user_id = %s
+            ORDER BY detected_at DESC
+            LIMIT 20
+        """, (user_id,))
+        rows = cursor.fetchall()
+
+        history = [
+            {
+                'id': row[0],
+                'url': row[1],
+                'model_used': row[2],
+                'prediction': row[3],
+                'title': row[4]
+            }
+            for row in rows
+        ]
+
+        return jsonify(history)
+    except Exception as e:
+        print("Error fetching history:", e)
+        return jsonify({'error': str(e)}), 500
+
 
 
 if __name__ == '__main__':
